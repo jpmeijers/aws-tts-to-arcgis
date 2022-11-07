@@ -51,4 +51,18 @@ Under Attributes add 4 new fields:
 * `arcgis-client-id`: You need to create a new application on ArcGis. This is the application's ID.
 * `arcgis-client-secret`: The ArcGis application's secret.
 * `arcgis-item-id-history`: A feature layer item ID where a full history of value will be appended. 
-* `arcgis-item-id-last`: A feature layer item ID where the last received message will be updated to. 
+* `arcgis-item-id-last`: A feature layer item ID where the last received message will be updated to.
+
+## Other requirements
+
+Your device needs a payload decoder configured on TTS. The decoded payload fields will become available as columns in ArcGis.
+On ArcGis your feature therefore need columns defined for all the device payload fields you are interested in. If there is no column defined for a specific decoded payload field, that field will be ignored.
+
+Your ArcGis feature layer also require the following columns:
+* `name` - The name of the device on TTS will be filled in here, and also uniquely identify the device. This field is used to update the "last" message.
+* `location_timestamp` - The time when TTS received the message will be stored in this column.
+* `hardware_serial` - The DevEUI will be added here.
+* `gateway` - The gateway ID that received this message with the strongest signal.
+* `rssi` - The best gateway's RSSI.
+* `snr` - The best gateway's SNR.
+* `signal` - A combination of RSSI and SNR which is used to determine the best gateway.
