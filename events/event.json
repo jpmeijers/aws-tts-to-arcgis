@@ -1,0 +1,42 @@
+{
+    "version": "2.0",
+    "routeKey": "$default",
+    "rawPath": "/",
+    "rawQueryString": "",
+    "headers": {
+        "content-length": "1628",
+        "x-amzn-tls-version": "TLSv1.2",
+        "x-forwarded-proto": "https",
+        "x-tts-domain": "eu1.cloud.thethings.network",
+        "x-forwarded-port": "443",
+        "x-forwarded-for": "165.255.9.3",
+        "accept": "*/*",
+        "x-amzn-tls-cipher-suite": "ECDHE-RSA-AES128-GCM-SHA256",
+        "x-amzn-trace-id": "Root=1-635fa928-1e004d867aeb3b1d507af692",
+        "host": "rvlt6wmxegnjjtkn6yeujjh4v40doojw.lambda-url.eu-west-1.on.aws",
+        "content-type": "application/json",
+        "x-downlink-apikey": "NNSXS.JTYMIW3C5HRXHK22TMR2HYJSFWX3HBXY5PIV3QQ.SO42QGRMZUZIPEFGVEUILTDFUDNWP6GHDXMZHP3QIZWDC6CVXOMA",
+        "accept-encoding": "gzip, deflate, br",
+        "user-agent": "PostmanRuntime/7.26.8"
+    },
+    "requestContext": {
+        "accountId": "anonymous",
+        "apiId": "rvlt6wmxegnjjtkn6yeujjh4v40doojw",
+        "domainName": "rvlt6wmxegnjjtkn6yeujjh4v40doojw.lambda-url.eu-west-1.on.aws",
+        "domainPrefix": "rvlt6wmxegnjjtkn6yeujjh4v40doojw",
+        "http": {
+            "method": "POST",
+            "path": "/",
+            "protocol": "HTTP/1.1",
+            "sourceIp": "165.255.9.3",
+            "userAgent": "PostmanRuntime/7.26.8"
+        },
+        "requestId": "4621b3e9-5b2d-4dde-a609-17a88b50b783",
+        "routeKey": "$default",
+        "stage": "$default",
+        "time": "31/Oct/2022:10:53:28 +0000",
+        "timeEpoch": 1667213608791
+    },
+    "body": "{\"end_device_ids\":{\"device_id\":\"eui-0004a30b002418f2\",\"application_ids\":{\"application_id\":\"izinto-lofence\"},\"dev_eui\":\"0004A30B002418F2\",\"join_eui\":\"0000000000000000\",\"dev_addr\":\"260BA048\"},\"correlation_ids\":[\"as:up:01GFQV4WKVY1K0X3TRCKDXXTCV\",\"gs:conn:01GFNFXQKP9E97JY1SNK8FHHM2\",\"gs:up:host:01GFNFXQMKGY3BHKQGZA03ACWK\",\"gs:uplink:01GFQV4WD0M8GSF0KKHW310K93\",\"ns:uplink:01GFQV4WD2V3F54QJF0CJJFZ9T\",\"rpc:/ttn.lorawan.v3.GsNs/HandleUplink:01GFQV4WD2P1GM2E4SZ1QZTXDD\",\"rpc:/ttn.lorawan.v3.NsAs/HandleUplink:01GFQV4WKT8EZN91PGKHFKDAVX\"],\"received_at\":\"2022-10-19T10:03:12.890712529Z\",\"uplink_message\":{\"session_key_id\":\"AX+xlV9yGlsZN1ZUkjqHaA==\",\"f_port\":2,\"f_cnt\":29409,\"frm_payload\":\"EGAU7ge2\",\"decoded_payload\":{\"battery\":4192,\"fence_negative\":1974,\"fence_positive\":5358},\"rx_metadata\":[{\"gateway_ids\":{\"gateway_id\":\"selati-04\",\"eui\":\"AC1F09FFFE065276\"},\"time\":\"2022-10-19T10:03:12.573Z\",\"timestamp\":3140435828,\"rssi\":-110,\"channel_rssi\":-110,\"snr\":2.8,\"location\":{\"latitude\":-23.989572,\"longitude\":30.771441,\"source\":\"SOURCE_REGISTRY\"},\"uplink_token\":\"ChcKFQoJc2VsYXRpLTA0EgisHwn//gZSdhD0/rzZCxoMCOCWv5oGENu108ACIKC6v4SzpRIqDAjglr+aBhDAkp2RAg==\",\"channel_index\":7,\"gps_time\":\"2022-10-19T10:03:12.573Z\",\"received_at\":\"2022-10-19T10:03:12.574950343Z\"}],\"settings\":{\"data_rate\":{\"lora\":{\"bandwidth\":125000,\"spreading_factor\":8,\"coding_rate\":\"4/5\"}},\"frequency\":\"868500000\",\"timestamp\":3140435828,\"time\":\"2022-10-19T10:03:12.573Z\"},\"received_at\":\"2022-10-19T10:03:12.674377907Z\",\"consumed_airtime\":\"0.102912s\",\"network_ids\":{\"net_id\":\"000013\",\"tenant_id\":\"ttn\",\"cluster_id\":\"eu1\",\"cluster_address\":\"eu1.cloud.thethings.network\"}}}\n",
+    "isBase64Encoded": false
+}

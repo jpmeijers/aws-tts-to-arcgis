@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "aws-tts-to-arcgis"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-chkn303n0s5j"
+s3_prefix = "aws-tts-to-arcgis"
+region = "eu-west-1"
+capabilities = "CAPABILITY_IAM"
+image_repositories = []

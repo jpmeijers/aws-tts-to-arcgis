@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Lambda Function URL
+Resources:
+  # Define the SQS topic
+  MySqsQueue:
+    Type: AWS::SQS::Queue
+
+  # Ingress function
+  TtsToArcgisIngressFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Receives HTTP POST from TTS and publish to SQS
+      CodeUri: ingress/
+      Handler: app.handler
+      Runtime: python3.8
+      FunctionUrlConfig:
+        AuthType: NONE
+      Environment:
+        Variables:
+          SQSqueueName: !Ref MySqsQueue
+      Policies:
+        # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt MySqsQueue.QueueName
+
+  # Process the message. Forward to ArcGis
+  TtsToArcgisProcessFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Receives from SQS Queue and process
+      PackageType: Image
+      Events:
+        MySQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt MySqsQueue.Arn
+            BatchSize: 10
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./process
+
+Outputs:
+  FunctionURLEndpoint:
+    Description: TtsToArcgisIngressFunction URL
+    Value: !GetAtt TtsToArcgisIngressFunctionUrl.FunctionUrl
+
+  SQSqueueName:
+    Description: SQS queue name
+    Value: !GetAtt MySqsQueue.QueueName
