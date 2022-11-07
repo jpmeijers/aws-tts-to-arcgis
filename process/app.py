@@ -194,7 +194,6 @@ def process_message(tts_domain, tts_api_key, post_data):
                 feature = feature_response.features[0]
 
                 # Only update if the current message is newer than the last one written to arcgis
-                print(message_time.timestamp()*1000, "<=", feature.attributes['location_timestamp'])
                 if math.floor(message_time.timestamp()*1000) <= feature.attributes['location_timestamp']:
                     print("Feature older than latest")
                     break
