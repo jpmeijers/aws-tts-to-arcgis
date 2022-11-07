@@ -10,11 +10,11 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["TtsToArcgisIngressFunction"]
 
-[function_build_definitions.afbf68d5-78bf-4ac3-86b9-40214acae2f8]
+[function_build_definitions.5e21c482-87cd-43ef-aa3d-7e1960e688be]
 packagetype = "Image"
 functions = ["TtsToArcgisProcessFunction"]
 
-[function_build_definitions.afbf68d5-78bf-4ac3-86b9-40214acae2f8.metadata]
+[function_build_definitions.5e21c482-87cd-43ef-aa3d-7e1960e688be.metadata]
 Dockerfile = "Dockerfile"
 DockerContext = "/home/jpmeijers/PycharmProjects/aws-tts-to-arcgis/process"
 
