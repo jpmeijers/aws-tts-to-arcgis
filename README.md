@@ -6,6 +6,8 @@ Install aws-cli: https://docs.aws.amazon.com/cli/latest/userguide/getting-starte
 
 Set up aws-cli: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-quickstart.html
 
+Add AWS SAM: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html
+
 Build and deploy:
 ```
 sam build
