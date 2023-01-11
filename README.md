@@ -8,6 +8,8 @@ Set up aws-cli: https://docs.aws.amazon.com/cli/latest/userguide/getting-started
 
 Add AWS SAM: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html
 
+Clone this repository or download it as a zip and extract it. Open a terminal in the folder containing this repository's content.
+
 Build and deploy:
 ```
 sam build
