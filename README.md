@@ -12,8 +12,8 @@ Clone this repository or download it as a zip and extract it. Open a terminal in
 
 Build and deploy:
 ```
-sam build
-sam deploy --resolve-image-repos
+sam build --use-container
+sam deploy --guided (may need --resolve-image-repos)
 ```
 Note the URL that is printed at the end of the deploy process. This is the URL we need to use on TTS.
 
