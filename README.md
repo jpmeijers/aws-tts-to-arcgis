@@ -63,10 +63,10 @@ Your device needs a payload decoder configured on TTS. The decoded payload field
 On ArcGis your feature therefore need columns defined for all the device payload fields you are interested in. If there is no column defined for a specific decoded payload field, that field will be ignored.
 
 Your ArcGis feature layer also require the following columns:
-* `name` - The name of the device on TTS will be filled in here, and also uniquely identify the device. This field is used to update the "last" message.
-* `location_timestamp` - The time when TTS received the message will be stored in this column.
-* `hardware_serial` - The DevEUI will be added here.
-* `gateway` - The gateway ID that received this message with the strongest signal.
-* `rssi` - The best gateway's RSSI.
-* `snr` - The best gateway's SNR.
-* `signal` - A combination of RSSI and SNR which is used to determine the best gateway.
+* `name` - String. The name of the device on TTS will be filled in here, and also uniquely identify the device. This field is used to update the "last" message.
+* `location_timestamp` - Time. The time when TTS received the message will be stored in this column.
+* `hardware_serial` - String. The DevEUI will be added here.
+* `gateway` - String. The gateway ID that received this message with the strongest signal.
+* `rssi` - Double. The best gateway's RSSI.
+* `snr` - Double. The best gateway's SNR.
+* `signal` - Double. A combination of RSSI and SNR which is used to determine the best gateway.
