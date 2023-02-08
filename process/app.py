@@ -19,7 +19,12 @@ def handler(event, context):
 
         print("DevID:", tts_body['end_device_ids']['device_id'], tts_domain, tts_api_key)
 
-        process_message(tts_domain, tts_api_key, tts_body)
+        # We wrap the actual add to arcgis in a try, to just skip over it when it fails, otherwise we get a queue
+        # buildup
+        try:
+            process_message(tts_domain, tts_api_key, tts_body)
+        except:
+            print("Failed adding to arcgis")
 
     return {
         'statusCode': 200,

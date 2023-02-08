@@ -6,6 +6,8 @@ Resources:
   # Define the SQS topic
   MySqsQueue:
     Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 90
 
   # Ingress function
   TtsToArcgisIngressFunction:
