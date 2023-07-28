@@ -1,3 +1,4 @@
 python-dateutil
 requests
 arcgis==1.9.1
+urllib3<2.0

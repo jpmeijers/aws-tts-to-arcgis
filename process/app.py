@@ -23,8 +23,9 @@ def handler(event, context):
         # buildup
         try:
             process_message(tts_domain, tts_api_key, tts_body)
-        except:
-            print("Failed adding to arcgis")
+        except Exception as error:
+            # handle the exception
+            print("Failed adding to arcgis:", error)
 
     return {
         'statusCode': 200,
@@ -80,11 +81,13 @@ def process_message(tts_domain, tts_api_key, post_data):
     try:
         item_id_history = attributes['arcgis-item-id-history']
     except:
-        return "Attributes does not contain arcgis-item-id-history"
+        item_id_history = None
+        # return "Attributes does not contain arcgis-item-id-history"
     try:
         item_id_last = attributes['arcgis-item-id-last']
     except:
-        return "Attributes does not contain arcgis-item-id-last"
+        item_id_last = None
+        # return "Attributes does not contain arcgis-item-id-last"
 
     decoded_payload = post_data['uplink_message']['decoded_payload']
     flat_payload = flatten_json(decoded_payload)
@@ -156,86 +159,88 @@ def process_message(tts_domain, tts_api_key, post_data):
 
     gis = GIS(token=token, referer="https://backend.izinto.cloud", expiration=9999)
 
-    # Append feature to layer or table
-    arcgis_item_history = gis.content.get(item_id_history)
-    for feature_layer in arcgis_item_history.layers:
-        properties = feature_layer.properties
-        if 'geometryType' in properties and feature_layer.properties['geometryType'] == 'esriGeometryPoint':
-            print("Adding GeometryPoint")
-            new_feature = arcgis_new_feature_with_location(flat_payload, message_time)
-            # print(new_feature)
-            result = feature_layer.edit_features(adds=[new_feature])
-            # print(result)
+    # Update "latest" existing feature
+    if item_id_last is not None:
+        arcgis_item_last = gis.content.get(item_id_last)
+        for layer in arcgis_item_last.layers:
+            properties = layer.properties
+            if 'geometryType' in properties and layer.properties['geometryType'] == 'esriGeometryPoint':
+                print("Updating GeometryPoint")
 
-    for feature_layer in arcgis_item_history.tables:
-        properties = feature_layer.properties
-        if 'type' in properties and feature_layer.properties['type'] == 'Table':
-            print("Adding to Table")
-            new_feature = arcgis_new_feature_no_location(flat_payload, message_time)
-            # print(new_feature)
-            result = feature_layer.edit_features(adds=[new_feature])
-            # print(result)
+                where_clause = f"name='{name}'"
+                feature_response = layer.query(where=where_clause)
 
-    # Update existing feature
-    arcgis_item_last = gis.content.get(item_id_last)
-    for feature_layer in arcgis_item_last.layers:
-        properties = feature_layer.properties
-        if 'geometryType' in properties and feature_layer.properties['geometryType'] == 'esriGeometryPoint':
-            print("Updating GeometryPoint")
+                if len(feature_response) == 0:
+                    print("Creating new feature")
+                    # Create a blank feature in case it does not exist yet
+                    new_feature = arcgis_new_feature_with_location(flat_payload, message_time)
+                    # print(new_feature)
+                    result = layer.edit_features(adds=[new_feature])
+                    # print(result)
 
-            where_clause = f"name='{name}'"
-            feature_response = feature_layer.query(where=where_clause)
+                else:
+                    # Only update the first one. Rest should be manually deleted.
+                    feature = feature_response.features[0]
 
-            if len(feature_response) == 0:
-                print("Creating new feature")
-                # Create a blank feature in case it does not exist yet
+                    # Only update if the current message is newer than the last one written to arcgis
+                    if math.floor(message_time.timestamp()*1000) <= feature.attributes['location_timestamp']:
+                        print("Feature older than latest")
+                        break
+
+                    feature = arcgis_update_feature_with_location(feature, flat_payload, message_time)
+                    # print(feature)
+
+                    result = layer.edit_features(updates=[feature])
+                    # print(result)
+
+        for table in arcgis_item_last.tables:
+            properties = table.properties
+            if 'type' in properties and table.properties['type'] == 'Table':
+                print("Updating Table")
+
+                where_clause = f"name='{name}'"
+                feature_response = table.query(where=where_clause)
+
+                if len(feature_response) == 0:
+                    print("Creating new feature")
+                    # Create a blank feature in case it does not exist yet
+                    new_feature = arcgis_new_feature_no_location(flat_payload, message_time)
+                    # print(new_feature)
+                    result = table.edit_features(adds=[new_feature])
+                    # print(result)
+
+                else:
+                    # Only update the first one. Rest should be manually deleted.
+                    feature = feature_response.features[0]
+
+                    # Only update if the current message is newer than the last one written to arcgis
+                    if math.floor(message_time.timestamp()*1000) <= feature.attributes['location_timestamp']:
+                        print("Feature older than latest")
+                        return
+
+                    feature = arcgis_update_feature_no_location(feature, flat_payload, message_time)
+                    # print(feature)
+
+                    result = table.edit_features(updates=[feature])
+                    # print(result)
+
+    # Append feature to history layer or table
+    if item_id_history is not None:
+        arcgis_item_history = gis.content.get(item_id_history)
+        for layer in arcgis_item_history.layers:
+            properties = layer.properties
+            if 'geometryType' in properties and layer.properties['geometryType'] == 'esriGeometryPoint':
+                print("Adding GeometryPoint")
                 new_feature = arcgis_new_feature_with_location(flat_payload, message_time)
                 # print(new_feature)
-                result = feature_layer.edit_features(adds=[new_feature])
+                result = layer.edit_features(adds=[new_feature])
                 # print(result)
 
-            else:
-                # Only update the first one. Rest should be manually deleted.
-                feature = feature_response.features[0]
-
-                # Only update if the current message is newer than the last one written to arcgis
-                if math.floor(message_time.timestamp()*1000) <= feature.attributes['location_timestamp']:
-                    print("Feature older than latest")
-                    break
-
-                feature = arcgis_update_feature_with_location(feature, flat_payload, message_time)
-                # print(feature)
-
-                result = feature_layer.edit_features(updates=[feature])
-                # print(result)
-
-    for feature_layer in arcgis_item_last.tables:
-        properties = feature_layer.properties
-        if 'type' in properties and feature_layer.properties['type'] == 'Table':
-            print("Updating Table")
-
-            where_clause = f"name='{name}'"
-            feature_response = feature_layer.query(where=where_clause)
-
-            if len(feature_response) == 0:
-                print("Creating new feature")
-                # Create a blank feature in case it does not exist yet
+        for table in arcgis_item_history.tables:
+            properties = table.properties
+            if 'type' in properties and table.properties['type'] == 'Table':
+                print("Adding to Table")
                 new_feature = arcgis_new_feature_no_location(flat_payload, message_time)
                 # print(new_feature)
-                result = feature_layer.edit_features(adds=[new_feature])
-                # print(result)
-
-            else:
-                # Only update the first one. Rest should be manually deleted.
-                feature = feature_response.features[0]
-
-                # Only update if the current message is newer than the last one written to arcgis
-                if math.floor(message_time.timestamp()*1000) <= feature.attributes['location_timestamp']:
-                    print("Feature older than latest")
-                    return
-
-                feature = arcgis_update_feature_no_location(feature, flat_payload, message_time)
-                # print(feature)
-
-                result = feature_layer.edit_features(updates=[feature])
+                result = table.edit_features(adds=[new_feature])
                 # print(result)
