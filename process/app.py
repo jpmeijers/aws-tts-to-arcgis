@@ -136,16 +136,18 @@ def process_message(tts_domain, tts_api_key, post_data):
     max_snr = 0
     for gateway in post_data['uplink_message']['rx_metadata']:
         gateway_count += 1
-        rssi = gateway['rssi']
-        snr = gateway['snr']
-        signal = rssi
-        if snr < 0:
-            signal = rssi + snr
-        if signal > max_signal:
-            best_gateway_id = gateway['gateway_ids']['gateway_id']
-            max_rssi = rssi
-            max_snr = snr
-            max_signal = signal
+        if 'rssi' in gateway:
+            rssi = gateway['rssi']
+            signal = rssi
+            if 'snr' in gateway:
+                snr = gateway['snr']
+                if snr < 0:
+                    signal = rssi + snr
+            if signal > max_signal:
+                best_gateway_id = gateway['gateway_ids']['gateway_id']
+                max_rssi = rssi
+                max_snr = snr
+                max_signal = signal
     flat_payload['gateway'] = best_gateway_id
     flat_payload['signal'] = max_signal
     flat_payload['rssi'] = max_rssi
