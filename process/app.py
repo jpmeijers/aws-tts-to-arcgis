@@ -9,6 +9,8 @@ from arcgis.gis import GIS
 from utils import arcgis_new_feature_with_location, arcgis_new_feature_no_location, flatten_json, \
     arcgis_update_feature_with_location, arcgis_update_feature_no_location
 
+tts_device_data_cache = dict()
+
 
 def handler(event, context):
     for record in event['Records']:
@@ -46,13 +48,20 @@ def process_message(tts_domain, tts_api_key, post_data):
 
     # Get the device attributes and name
     url = 'https://' + tts_domain + '/api/v3/applications/' + application_id + '/devices/' + device_id + '?field_mask=name,attributes,locations'
-    device_response = requests.get(url, headers={"Authorization": "Bearer " + tts_api_key})
-    try:
-        device_json = device_response.json()
-    except:
-        return "device json error"
-    if device_json is None:
-        return "device json empty"
+
+    device_json = None
+    if url in tts_device_data_cache:
+        device_json = tts_device_data_cache[url]
+    else:
+        device_response = requests.get(url, headers={"Authorization": "Bearer " + tts_api_key})
+        try:
+            device_json = device_response.json()
+        except:
+            return "tts device json error"
+        if device_json is None:
+            return "tts device json empty"
+        # Store in cache
+        tts_device_data_cache[url] = device_json
 
     # print(device_json)
 
@@ -184,7 +193,7 @@ def process_message(tts_domain, tts_api_key, post_data):
                     feature = feature_response.features[0]
 
                     # Only update if the current message is newer than the last one written to arcgis
-                    if math.floor(message_time.timestamp()*1000) <= feature.attributes['location_timestamp']:
+                    if math.floor(message_time.timestamp() * 1000) <= feature.attributes['location_timestamp']:
                         print("Feature older than latest")
                         break
 
@@ -215,7 +224,7 @@ def process_message(tts_domain, tts_api_key, post_data):
                     feature = feature_response.features[0]
 
                     # Only update if the current message is newer than the last one written to arcgis
-                    if math.floor(message_time.timestamp()*1000) <= feature.attributes['location_timestamp']:
+                    if math.floor(message_time.timestamp() * 1000) <= feature.attributes['location_timestamp']:
                         print("Feature older than latest")
                         return
 
