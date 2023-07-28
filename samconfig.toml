@@ -3,8 +3,9 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "aws-tts-to-arcgis"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-chkn303n0s5j"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-2heyu8r2fuiy"
 s3_prefix = "aws-tts-to-arcgis"
 region = "eu-west-1"
 capabilities = "CAPABILITY_IAM"
-image_repositories = []
+image_repositories = ["TtsToArcgisProcessFunction=813284180469.dkr.ecr.eu-west-1.amazonaws.com/awsttstoarcgisf9599e04/ttstoarcgisprocessfunctiondacf8a2erepo"]
+confirm_changeset = true

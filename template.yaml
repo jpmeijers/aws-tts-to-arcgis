@@ -33,7 +33,7 @@ Resources:
     Properties:
       Description: Receives from SQS Queue and process
       PackageType: Image
-      Timeout: 60
+      Timeout: 20
       Events:
         MySQSEvent:
           Type: SQS
