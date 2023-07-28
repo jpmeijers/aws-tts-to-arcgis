@@ -12,20 +12,21 @@ from utils import arcgis_new_feature_with_location, arcgis_new_feature_no_locati
 
 def handler(event, context):
     for record in event['Records']:
-        tts_event = json.loads(record['body'])
-        tts_body = json.loads(tts_event['body'])
-        tts_domain = tts_event['headers']['x-tts-domain']
-        tts_api_key = tts_event['headers']['x-downlink-apikey']
-
-        print("DevID:", tts_body['end_device_ids']['device_id'], tts_domain, tts_api_key)
-
-        # We wrap the actual add to arcgis in a try, to just skip over it when it fails, otherwise we get a queue
-        # buildup
         try:
+            tts_event = json.loads(record['body'])
+            tts_body = json.loads(tts_event['body'])
+            tts_domain = tts_event['headers']['x-tts-domain']
+            tts_api_key = tts_event['headers']['x-downlink-apikey']
+
+            print("DevID:", tts_body['end_device_ids']['device_id'], tts_domain, tts_api_key)
+
+            # We wrap the actual add to arcgis in a try, to just skip over it when it fails, otherwise we get a queue
+            # buildup
             process_message(tts_domain, tts_api_key, tts_body)
         except Exception as error:
             # handle the exception
-            print("Failed adding to arcgis:", error)
+            print("Process failed:", error)
+            print(record)
 
     return {
         'statusCode': 200,
