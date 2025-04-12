@@ -212,7 +212,8 @@ def process_message(tts_domain, tts_api_key, post_data):
             if 'type' in properties and table.properties['type'] == 'Table':
                 print("Updating Table")
 
-                where_clause = f"name='{name}'"
+                escapedName = name.replace("'", "''")
+                where_clause = f"name='{escapedName}'"
                 feature_response = table.query(where=where_clause)
 
                 if len(feature_response) == 0:
