@@ -143,6 +143,8 @@ def process_message(tts_domain, tts_api_key, post_data):
                 snr = gateway['snr']
                 if snr < 0:
                     signal = rssi + snr
+            else:
+                snr = 0
             if signal > max_signal:
                 best_gateway_id = gateway['gateway_ids']['gateway_id']
                 max_rssi = rssi
@@ -178,8 +180,8 @@ def process_message(tts_domain, tts_api_key, post_data):
             properties = layer.properties
             if 'geometryType' in properties and layer.properties['geometryType'] == 'esriGeometryPoint':
                 print("Updating GeometryPoint")
-
-                where_clause = f"name='{name}'"
+                escapedName = name.replace("'", "''")
+                where_clause = f"name='{escapedName}'"
                 feature_response = layer.query(where=where_clause)
 
                 if len(feature_response) == 0:
@@ -210,7 +212,8 @@ def process_message(tts_domain, tts_api_key, post_data):
             if 'type' in properties and table.properties['type'] == 'Table':
                 print("Updating Table")
 
-                where_clause = f"name='{name}'"
+                escapedName = name.replace("'", "''")
+                where_clause = f"name='{escapedName}'"
                 feature_response = table.query(where=where_clause)
 
                 if len(feature_response) == 0:
